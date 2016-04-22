@@ -1,9 +1,14 @@
+from __future__ import print_function
+from builtins import map
+from builtins import str
+from builtins import range
 import argparse
 import json
 from itertools import combinations_with_replacement, combinations
 
 from pprint import pprint
 from collections import defaultdict
+from codecs import getreader
 
 import numpy as np
 from pandas import DataFrame
@@ -50,7 +55,8 @@ HAND_PICKED=[
 
 def read_newline_json(path, keys_to_use=ALT_LIWC_KEYS):
     with open(path, 'rb') as f:
-        return [parse_input_json(line, keys_to_use) for line in f.readlines()]
+        return [parse_input_json(line.decode('utf8'), keys_to_use)
+                for line in f.readlines()]
 
 def read_valid_json(path):
     with open(path, 'rb') as f:
@@ -79,7 +85,7 @@ def parse_input_json(line, keys=LIWC_KEYS):
 # Thin wrapper around dict comprehensions
 # returns a dict where the keys meet some 'methods' criteria
 def pluck_keys(obj, method):
-    return {k:v for (k,v) in obj.items() if method(k,v)}
+    return {k:v for (k,v) in list(obj.items()) if method(k,v)}
 
 # Get an object without an array of keys
 def remove_keys(obj, keys):
@@ -131,7 +137,7 @@ def tuple_to_str(tup, delim=','):
     return delim.join(map(str,tup))
 
 def str_to_tuple(string, delim=','):
-    return tuple(filter(None, string.split(delim)))
+    return tuple([_f for _f in string.split(delim) if _f])
 
 # [{a:0, b:1, c:1}, ..., {a:1, b:2, c:0}]
 # =>
@@ -144,7 +150,7 @@ def create_graph_of_liwc(list_of_objs):
     G = nx.Graph()
     liwc_data = pick_key(list_of_objs, 'liwc')
 
-    nodes = [key for key in liwc_data[0].keys()]
+    nodes = [key for key in list(liwc_data[0].keys())]
     G.add_nodes_from(nodes)
 
     # pprint(liwc_data[-1])
@@ -159,17 +165,17 @@ def create_graph_of_liwc(list_of_objs):
         connected_nodes = pluck_keys(tweet, non_zero_pairs)
         cur_both = [tuple_to_str(item) for item
                         in itertools.combinations_with_replacement(
-                            connected_nodes.keys(), 2)]
+                            list(connected_nodes.keys()), 2)]
         both.extend(cur_both)
 
         cur_edges = [tuple_to_str(edge) for edge
                         in itertools.combinations(
-                            connected_nodes.keys(), 2)]
+                            list(connected_nodes.keys()), 2)]
         edges.extend(cur_edges)
 
         cur_nodes = [tuple_to_str(node) for node
                         in itertools.combinations(
-                            connected_nodes.keys(), 1)]
+                            list(connected_nodes.keys()), 1)]
         node_size.extend(cur_nodes)
 
     # pprint(str_to_tuple(tuple_to_str(edges[0])))
@@ -182,7 +188,7 @@ def convert_to_edges(list_of_objs):
     for tweet in pick_key(list_of_objs, 'liwc'):
         connections = pluck_keys(tweet, non_zero_pairs)
         edges.extend([tuple_to_str(n) for n in
-            combinations_with_replacement(connections.keys(), 2)])
+            combinations_with_replacement(list(connections.keys()), 2)])
     return unique_count(edges)
 
 def create_adjacency_matrix(json_node_link_data):
@@ -210,34 +216,34 @@ def main(args):
     # data = create_graph_of_liwc(raw_data)
     # pprint(convert_to_edges(raw_data))
 
-    write_edgelist_to_file('data/topic-hand-picked-edgelist.txt', raw_data)
-    weighted_edgelist = read_edgelist_to_file('data/topic-hand-picked-edgelist.txt')
-    # weighted_edgelist.edges(data=True)
-    json_weighted_edgelist = json_graph.node_link_data(weighted_edgelist)
-    pprint(json_weighted_edgelist['nodes'])
-    print create_adjacency_matrix(json_weighted_edgelist)
-    write_json_to_file(json_weighted_edgelist, 'data/topic-hand-picked-edgelist.json')
+    # write_edgelist_to_file('data/topic-hand-picked-edgelist.txt', raw_data)
+    # weighted_edgelist = read_edgelist_to_file('data/topic-hand-picked-edgelist.txt')
+    # # weighted_edgelist.edges(data=True)
+    # json_weighted_edgelist = json_graph.node_link_data(weighted_edgelist)
+    # pprint(json_weighted_edgelist['nodes'])
+    # print create_adjacency_matrix(json_weighted_edgelist)
+    # write_json_to_file(json_weighted_edgelist, 'data/topic-hand-picked-edgelist.json')
 
-
-    pprint(len(raw_data))
-    pprint(raw_data[-1])
+    # pprint(len(raw_data))
+    # pprint(raw_data[-1])
 
     # flat_data = pick_key(pick_key(raw_data, 'user', empty_or_val), 'id', empty_or_val)
     # flat_data = pick_key(pick_key(raw_data, 'user'), 'location')
     # flat_data = pick_key(raw_data, 'coordinates', empty_or_val)
     # flat_data = pick_key(raw_data, 'created_at', get_month)
     # flat_data = pick_key(data, 'health', float)
-    # flat_data = pick_key(data, 'in_reply_to_status_id', none_or_int)
+    flat_data_ids = pick_key(raw_data, 'in_reply_to_status_id')
+    flat_data = pick_key(raw_data, 'in_reply_to_status_id', none_or_int)
     # flat_data = pick_key(pick_key(data, 'entities'), 'user_mentions', empty_or_val)
     # pprint(np.histogram(flat_data, bins=2))
 
     # print(flat_data)
     # pprint(np.histogram(flat_data, bins=2))
-    # pprint(unique_count(flat_data))
+    pprint(unique_count(flat_data))
+    pprint([i for i in flat_data_ids if i is not None])
 
     if args.output_path:
         write_json_to_file(raw_data, args.output_path)
-
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

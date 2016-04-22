@@ -87,3 +87,7 @@ docs/_build/
 target/
 
 *.graffle
+liwc/
+papers/
+nrc/
+data/

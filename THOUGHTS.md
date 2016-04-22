@@ -18,10 +18,27 @@ Look at connections
 
 * Semantic co-occurrence
   * LIWC
-  * Semantic similarity
-  * Word2Vec
-
+  * EmoLex
+  * Sentiment
 
 * Establish a conversational context
   Allow user to create a context based on
   * Connect
+
+
+Metrics for:
+- [  ] LIWC document metrics
+- [  ] EmoLex document metrics
+- [  ] Sentiment document metrics
+
+Applied to:
+- [  ] Individual tweets
+- [  ] Conversations
+- [  ] Mentions
+- [  ] Cliques
+  - [  ] Tweets
+  - [  ] Profiles
+- [  ] Users
+  - [  ] Tweets
+  - [  ] Profiles
+- [  ] Geographic neighborhoods
