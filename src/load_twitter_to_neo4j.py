@@ -62,64 +62,6 @@ def main(args):
     )
     '''
 
-    # query='''
-    # WITH {json} AS tweets
-    # UNWIND tweets as t
-    # RETURN
-    # CASE
-    # WHEN t.in_reply_to_status_id <> 'None'
-    # THEN t.in_reply_to_status_id
-    # END
-    # '''
-
-    # query='''
-    # WITH {json} AS doc
-    # UNWIND doc AS tw
-    # UNWIND tw.user AS original_user
-    # UNWIND tw.entities AS entities
-    # UNWIND entities.user_mentions AS user_mention
-    # UNWIND entities.hashtags AS hashtag
-    # MERGE (u:User {id: original_user.id_str,
-    #                name: original_user.name,
-    #                screen_name: original_user.screen_name,
-    #                location: original_user.location,
-    #                description: original_user.description})
-    #
-    # MERGE (um:User {id: user_mention.id_str,
-    #                name: user_mention.name,
-    #                screen_name: user_mention.screen_name,
-    #                location: user_mention.location,
-    #                description: user_mention.description})
-    #
-    # MERGE (u)-[:MENTIONED]->(um)
-    # '''
-    # MERGE (u:User {id:tw.user.id_str}) ON CREATE
-    #     SET u.name = tw.user.name,
-    #         u.screen_name = tw.user.screen_name,
-    #         u.location = tw.user.location,
-    #         u.description = tw.user.description
-
-    # FOREACH (um IN tw.entities.user_mentions |
-    #     MERGE (um2:User {id:tw.entities.user_mentions.id_str}) ON CREATE
-    #         SET um2.name = tw.user.name,
-    #             um2.screen_name = tw.user.screen_name
-    #     MERGE (u)-[:MENTIONED]->(um2))
-
-    # ou:User {id:tw.user.id_str}
-
-    # MERGE (um:User {id:id_str}) ON CREATE
-    #     SET um.name = user_mentions.name,
-    #         um.screen_name = user_mentions.screen_name
-
-    # RETURN user_mentions.name, user.name
-
-    # query='''
-    # WITH {json} AS data
-    # UNWIND data AS tweet
-    # UNWIND tweet.user AS user
-    # RETURN user.name
-    # '''
-
     print(execute(query, json=json))
 
 

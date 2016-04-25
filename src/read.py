@@ -53,7 +53,7 @@ HAND_PICKED=[
     'body', 'health', 'sexual',
     'work', 'leisure', 'money',]
 
-def read_newline_json(path, keys_to_use=ALT_LIWC_KEYS):
+def read_newline_json(path, keys_to_use=LIWC_KEYS):
     with open(path, 'rb') as f:
         return [parse_input_json(line.decode('utf8'), keys_to_use)
                 for line in f.readlines()]
