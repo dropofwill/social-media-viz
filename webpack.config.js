@@ -9,8 +9,8 @@ module.exports = {
   },
 
   output: {
-    path: path.resolve('build'),
-    filename: 'static/[name].js',
+    path: path.resolve('static'),
+    filename: '[name].js',
   },
 
   module: {

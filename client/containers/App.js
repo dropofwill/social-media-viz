@@ -1,11 +1,19 @@
 import React, { PropTypes } from 'react';
+import { Appbar } from 'material-components';
 
-const App = ({ state }) => (
-  <div>{state}</div>
+const App = ({ count }) => (
+  <div>
+    <AppBar
+      title="Social Media Visualization"
+      iconClassNameRight="muidocs-icon-navigation-expand-more"
+    />
+
+    <p>{count}</p>
+  </div>
 );
 
 App.propTypes = {
-  state: PropTypes.number.isRequired,
+  count: PropTypes.number.isRequired,
 };
 
 export default App;

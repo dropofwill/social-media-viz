@@ -1,13 +1,20 @@
 from bottle import Bottle, run, route, get, post, static_file
+from os import path
 
 app = Bottle()
 
-@app.route('/hello')
-def hello():
-    return "Hello World!"
+pwd = path.dirname(__file__)
+static_dir = path.join(pwd, 'static/')
 
-@route('/static/<filepath:path>')
+# Serve static assets
+@app.route('/static/<filepath:path>')
 def server_static(filepath):
-    return static_file(filepath, root='./static')
+    return static_file(filepath, root=static_dir)
 
-run(app, host='localhost', port=8080)
+# Root, only server-side view for the website
+# For react router purposes, match it for any route not matched above
+@app.route('<:re:.+>')
+def home():
+    return static_file('index.html', root=pwd)
+
+run(app, host='localhost', port=8080, reloader=True)
