@@ -2,6 +2,25 @@
 
 Social Media ILWC Visualization project
 
+## Requirements
+
+* Python 3.x
+* Neo4J
+* LIWC dataset
+* NRC Emolex dataset
+* NRC Sentiment dataset
+* Twitter data
+
+```
+# Install required Python modules
+pip install -r requirements.txt
+python index.py
+
+# Install required client side JS modules
+npm install
+npm start
+```
+
 ## Ideas
 
 Calculate the overlap between any features
