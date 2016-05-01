@@ -1,7 +1,7 @@
 import os
-from py2neo import Graph, authenticate
+from py2neo import Graph, Node, authenticate
 
-from api import json_io
+from api import json_io, liwc
 
 upload_query = '''
 WITH {json} AS tweets
@@ -57,6 +57,34 @@ def load(path, chunk_size=100):
     for batch in json_io.read_chunked_newline_json(path, chunk_size):
         print('Loading a batch of ' + len(batch) + ' tweets.')
         graph.run(upload_query, json=batch)
+
+'''
+Returns tweets that have no LIWC relationship, but do have text. 
+
+return lazy cursor
+'''
+def match_tweets_without_liwc(graph):
+    query='''
+    MATCH (t:Tweet) WHERE NOT (t)-[:HAS_LIWC]-() AND NOT t.text IS NULL
+    RETURN t
+    LIMIT 10
+    '''
+    match_cursor = graph.run(query)
+
+    while match_cursor.forward():
+        tx = graph.begin()
+        tweet_node = match_cursor.current['t']
+        summary = liwc.summarize_string(tweet_node['text'])
+        l_n = Node('Liwc')
+
+        for k,v in summary.items():
+            l_n[k] = v
+
+        print(l_n)
+
+
+def update_liwc_tweets():
+    graph = authenticated_graph()
 
 def wipe():
     return authenticated_graph().delete_all()

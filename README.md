@@ -5,19 +5,26 @@ Social Media ILWC Visualization project
 ## Requirements
 
 * Python 3.x
+* NPM
 * Neo4J
 * LIWC dataset
 * NRC Emolex dataset
-* NRC Sentiment dataset
-* Twitter data
+* Some JSON Twitter data
 
 ```
+# Install neo4j, on Mac with homebrew for example:
+brew update && brew install neo4j
+
 # Install required Python modules
 pip install -r requirements.txt
-python index.py
 
 # Install required client side JS modules
 npm install
+
+# start the server
+python index.py
+
+# start the client
 npm start
 ```
 
