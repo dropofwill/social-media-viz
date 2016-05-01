@@ -7,6 +7,8 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import App from './containers/App';
 import configureStore from './configureStore';
 
+require('material-components/lib/index.css');
+
 // Needed for onTouchTap
 // Can go away when react 1.0 release
 // Check this repo:
@@ -17,9 +19,7 @@ const store = configureStore();
 
 render(
   <Provider store={store}>
-
-      <App count={0} />
-
+    <App count={0} />
   </Provider>,
   document.getElementById('root')
 );

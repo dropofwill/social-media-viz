@@ -1,7 +1,7 @@
 /* eslint-disable */
 var path = require('path');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var extractCSS = new ExtractTextPlugin('css/main.css');
+// var ExtractTextPlugin = require('extract-text-webpack-plugin');
+// var extractCSS = new ExtractTextPlugin('css/main.css');
 
 module.exports = {
   entry: {
@@ -16,9 +16,9 @@ module.exports = {
   module: {
     loaders: [
       {
-        test: /\.scss$/,
-        exclude: /node_modules/,
-        loader: extractCSS.extract(['css-loader']),
+        test: /\.css$/,
+        loader: 'style-loader!css-loader',
+        // loader: extractCSS.extract(['css-loader']),
       },
       {
         test: /\.js$/,
@@ -27,8 +27,7 @@ module.exports = {
       },
     ],
   },
-
-  plugins: [
-    extractCSS,
-  ],
+  // plugins: [
+  //   extractCSS,
+  // ],
 };
