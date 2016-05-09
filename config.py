@@ -1,3 +1,3 @@
-from api import upload
+from api import upload, query
 
 graph = upload.authenticated_graph()
