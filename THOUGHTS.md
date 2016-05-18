@@ -25,9 +25,8 @@ Look at connections
   Allow user to create a context based on
   * Connect
 
-
 Metrics for:
-- [  ] LIWC document metrics
+- [ x ] LIWC document metrics
 - [  ] EmoLex document metrics
 - [  ] Sentiment document metrics
 
